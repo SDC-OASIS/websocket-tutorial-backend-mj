@@ -12,7 +12,9 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
+        // 메세지 브로커를 등록하는 코드 /topic이나 /queue를 주로 사용함
         config.enableSimpleBroker("/sub");
+        // 도착 경로에 대한 prefix
         config.setApplicationDestinationPrefixes("/pub");
     }
 
