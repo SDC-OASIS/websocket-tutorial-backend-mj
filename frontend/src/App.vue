@@ -1,18 +1,19 @@
 <template>
   <div id="app">
-    <Chat/>
+    <ChatRoom/>
   </div>
 </template>
 
 <script>
-import Chat from './components/Chat.vue'
+import ChatRoom from './components/ChatRoom.vue'
 
 export default {
   name: 'App',
   components: {
-    Chat
+    ChatRoom
   }
 }
+
 </script>
 
 <style>
