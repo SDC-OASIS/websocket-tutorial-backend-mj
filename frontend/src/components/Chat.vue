@@ -1,25 +1,27 @@
 <template>
-  <div id="app">
-    <div>{{this.roomId}}</div>
-    <!-- <div>{{this.recvList}}</div> -->
-    <div
-      v-for="(item, idx) in recvList"
-      :key="idx"
-    >
-      <h5>유저이름: {{ item.sender }}</h5>
-      <h5>내용: {{ item.message }}</h5>
+  <div class="chat-container">
+    <div v-if="this.roomId ==''">
+      <div style="margin-top:200px">
+        채팅에 참여하시려면 채팅방을 클릭해주세요.
+      </div>
+    </div>
+    <div v-else>
+      <!-- <div>{{this.roomId}}</div> -->
+      <div v-for="(item, idx) in recvList" :key="idx">
+        <div v-if="item.type == 'JOIN'">
+          <h5>{{ item.message }}</h5>
+        </div>
+        <div v-else style="display:inline-block;  margin:5px;">
+          <span style="padding-right:10px;">{{ item.sender }}</span>
+          <span style="width:300px; background-color:#FFFFFF; padding:3px;">{{ item.message }}</span>
+        </div>
+      </div>
+      <div class="input-container">
+        유저: <input v-model="userName" type="text" style="width:70px">
+        내용: <input v-model="message" type="text" @keyup="sendMessage" style="width:200px">
+      </div>
     </div>
     
-    유저이름: 
-    <input
-      v-model="userName"
-      type="text"
-    >
-    내용: <input
-      v-model="message"
-      type="text"
-      @keyup="sendMessage"
-    >
     
   </div>
 </template>
@@ -33,7 +35,7 @@ export default {
   props: {
     roomId: {
       type: String,
-      default: 'basic',
+      default: 'basic', //왜 default가 안먹히는지 추후 확인
     }
   },
   data() {
@@ -140,3 +142,18 @@ export default {
   }
 }
 </script>
+<style scoped>
+.chat-container {
+  width:500px; 
+  height: 500px;
+  display:inline-block;
+  background-color: rgb(175, 206, 241);
+}
+.input-container{
+  position: absolute;
+  top: 70vh;
+  right:20vw;
+  display: inline-block;
+  width:500px;
+}
+</style>

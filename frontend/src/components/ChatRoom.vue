@@ -1,13 +1,15 @@
 <template>
-  <div>
-    <div style="width:500px; display:inline-block">
+  <div style="display:flex;">
+    <div class="chat-room-container">
       <h1>채팅방 목록</h1>
-      <div v-for="chatRoom in chatRooms" :key="chatRoom.roomId" style="width:300px;" @click="openChat(chatRoom.roomId)">
-        채팅 방이름 : {{chatRoom.name}} 
-        채팅 번호 : {{chatRoom.roomId}} 
+      <div class="chat-room-inner-container">
+        <div class="chat-room-item" v-for="chatRoom in chatRooms" :key="chatRoom.roomId" style="" @click="openChat(chatRoom.roomId)">
+          채팅 방이름 : {{chatRoom.name}}  "입장하려면 클릭!"
+          <!-- 채팅 번호 : {{chatRoom.roomId}}  -->
+        </div>
       </div>
     </div>
-    <Chat :roomId="this.roomId" style="width:500px; display:inline-block"/>
+    <Chat :roomId="this.roomId" style="display:inline-block" />
 
   </div>
 </template>
@@ -53,5 +55,17 @@ export default {
 </script>
 
 <style>
-
+.chat-room-container {
+  width:400px; 
+  padding: 50px 20px;
+  display:inline-block; 
+  background-color:#eef8b7;
+}
+.chat-room-inner-container {
+  border: 1px solid #5e5029;
+}
+.chat-room-item {
+  border: 1px solid #5e5029;
+  padding: 20px 10px;
+}
 </style>
