@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    {{this.roomId}}
+    <div>{{this.roomId}}</div>
+    <div>{{this.recvList}}</div>
+    
     유저이름: 
     <input
       v-model="userName"
@@ -22,12 +24,8 @@
 </template>
 
 <script>
-// import axios from 'axios'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
-// var sock = new SockJS("/ws-stomp");
-// var ws = Stomp.over(sock);
-// var reconnect = 0;
 
 export default {
   name: 'App',
@@ -40,18 +38,11 @@ export default {
   data() {
     return {
       userName: "",
-      // message: "",
+      message: "",
       recvList: [],
-    
-      room: {},
-      sender: '',
-      message: '',
-      messages: []
     }
   },
   created() {
-    // App.vue가 생성되면 소켓 연결을 시도합니다.
-    console.log(this.roomId)
     this.connect()
   },
   methods: {
@@ -95,10 +86,12 @@ export default {
       console.log("Send message:" + this.message);
       if (this.stompClient && this.stompClient.connected) {
         const msg = { 
-          userName: this.userName,
-          content: this.message 
+          type:'Talk',
+          roomId: this.roomId,
+          sender: this.userName,
+          message: this.message 
         };
-        this.stompClient.send("/receive", JSON.stringify(msg), {});
+        this.stompClient.send("/pub/chat/message", JSON.stringify(msg), {});
       }
     },    
     connect() {
