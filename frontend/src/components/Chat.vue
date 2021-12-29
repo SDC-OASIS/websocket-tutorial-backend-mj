@@ -1,7 +1,14 @@
 <template>
   <div id="app">
     <div>{{this.roomId}}</div>
-    <div>{{this.recvList}}</div>
+    <!-- <div>{{this.recvList}}</div> -->
+    <div
+      v-for="(item, idx) in recvList"
+      :key="idx"
+    >
+      <h5>유저이름: {{ item.sender }}</h5>
+      <h5>내용: {{ item.message }}</h5>
+    </div>
     
     유저이름: 
     <input
@@ -13,13 +20,7 @@
       type="text"
       @keyup="sendMessage"
     >
-    <!-- <div
-      v-for="(item, idx) in recvList"
-      :key="idx"
-    >
-      <h3>유저이름: {{ item.userName }}</h3>
-      <h3>내용: {{ item.content }}</h3>
-    </div> -->
+    
   </div>
 </template>
 
@@ -37,13 +38,19 @@ export default {
   },
   data() {
     return {
-      userName: "",
+      userName: "희은",
       message: "",
       recvList: [],
     }
   },
   created() {
     this.connect()
+  },
+  watch: {
+    roomId: function(){
+      this.recvList=[] // 새로운 방 입장시 초기화
+      this.connect() // 새로운 방 다시 연결
+    }
   },
   methods: {
     // findRoom: function() {
@@ -86,12 +93,14 @@ export default {
       console.log("Send message:" + this.message);
       if (this.stompClient && this.stompClient.connected) {
         const msg = { 
-          type:'Talk',
+          type:'TALK',
           roomId: this.roomId,
           sender: this.userName,
           message: this.message 
         };
-        this.stompClient.send("/pub/chat/message", JSON.stringify(msg), {});
+        this.stompClient.send("/pub/chat/message", JSON.stringify(msg), res=>{
+          console.log('메세지 보내기', res)
+        });
       }
     },    
     connect() {
@@ -114,6 +123,12 @@ export default {
             // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
             this.recvList.push(JSON.parse(res.body))
           });
+          const msg = {
+            type:'JOIN', 
+            roomId: this.roomId, 
+            sender: this.userName,
+          }
+          this.stompClient.send("/pub/chat/message", JSON.stringify(msg), {});
         },
         error => {
           // 소켓 연결 실패
